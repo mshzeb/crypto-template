@@ -1,0 +1,35 @@
+$(document).ready(function(){
+    $('#frmContact').submit(function(e){
+      e.preventDefault();
+      
+      //Disable 'Send Message' button
+      $('#sendMsg').attr("disabled", true);
+
+      var post_url = $(this).attr("action");
+      var request_method = $(this).attr("method");
+      var form_data = $(this).serialize();
+
+      $.ajax({
+        url: post_url,
+        type: request_method,
+        data: form_data,
+        success: function(response){
+          if(response == 'success'){
+            $("#ajaxMsg").html("<div class='alert alert-success alert-dismissible fade show' role='alert'> Message sent! Thanks for contacting us. <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>");
+            console.log(response);
+            $('#frmContact').trigger("reset"); // reset form fields after submission
+          } else{
+            //$("#ajaxMsg").html(response);
+            $("#ajaxMsg").html("<div class='alert alert-danger alert-dismissible fade show' role='alert'> Sorry! Something went wrong. Please try again later. <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>");
+            console.log(response);
+          }          
+          //$("#ajaxMsg").html("<div class='alert alert-success alert-dismissible fade show' role='alert'>"+data.message+"<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"); 
+        },
+        complete: function() {
+            // Ajax request is finished, so we can enable the button again
+            $('#sendMsg').attr("disabled", false);
+        }
+      });
+
+    });
+  });
